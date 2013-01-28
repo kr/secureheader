@@ -1,0 +1,4 @@
+Package secureheaders adds some HTTP headers widely considered to
+improve safety of HTTP requests.
+
+See http://godoc.org/github.com/kr/secureheaders for more.
