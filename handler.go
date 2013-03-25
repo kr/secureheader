@@ -1,6 +1,6 @@
-// Package secureheaders adds some HTTP headers widely considered
-// to improve safety of HTTP requests. These headers are
-// documented as follows:
+// Package secureheader adds some HTTP header fields widely
+// considered to improve safety of HTTP requests. These fields
+// are documented as follows:
 //
 //   Strict Transport Security: https://tools.ietf.org/html/rfc6797
 //   Frame Options:             https://tools.ietf.org/html/draft-ietf-websec-x-frame-options-00
@@ -8,7 +8,7 @@
 //   Content Type Options:      http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx
 //
 // The easiest way to use this package is to replace nil in your
-// http.ListenAndServe call with secureheaders.DefaultHandler.
+// http.ListenAndServe call with secureheader.DefaultHandler.
 // DefaultHandler is initialized to a chain of handlers with
 // conservative (safer and more restrictive) behavior. If you want
 // to customize its behavior (for example, omitting one of the
@@ -19,11 +19,11 @@
 //
 // This package was inspired by Twitter's secureheaders Ruby
 // library. See https://github.com/twitter/secureheaders.
-package secureheaders
+package secureheader
 
 // TODO(kr): figure out how to add this one:
 //   Content Security Policy:   https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
-// See https://github.com/kr/secureheaders/issues/1.
+// See https://github.com/kr/secureheader/issues/1.
 
 import (
 	"net/http"

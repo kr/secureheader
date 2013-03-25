@@ -1,4 +1,4 @@
-package secureheaders
+package secureheader
 
 import (
 	"fmt"

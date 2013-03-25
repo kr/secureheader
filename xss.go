@@ -1,4 +1,4 @@
-package secureheaders
+package secureheader
 
 // XSSProtection returns a filter that sets header field
 // X-XSS-Protection to "1" or "0", optionally with "mode=block".

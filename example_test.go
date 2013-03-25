@@ -1,14 +1,14 @@
-package secureheaders_test
+package secureheader_test
 
 import (
-	"github.com/kr/secureheaders"
+	"github.com/kr/secureheader"
 	"net/http"
 	"time"
 )
 
 func Example() {
 	http.Handle("/", http.FileServer(http.Dir("/tmp")))
-	http.ListenAndServe(":80", secureheaders.DefaultHandler)
+	http.ListenAndServe(":80", secureheader.DefaultHandler)
 }
 
 func Example_custom() {
@@ -17,17 +17,17 @@ func Example_custom() {
 	// Differences from DefaultFilter:
 	// - permit unencrypted HTTP requests to subdomains in HSTS
 	// - permit pages to be contained in frames (omit FrameOptions)
-	f := secureheaders.Compose(
-		secureheaders.HTTPSRedirect(),
-		secureheaders.ContentTypeOptions(),
-		secureheaders.HSTS(100*24*time.Hour, false),
-		secureheaders.XSSProtection(true, false),
+	f := secureheader.Compose(
+		secureheader.HTTPSRedirect(),
+		secureheader.ContentTypeOptions(),
+		secureheader.HSTS(100*24*time.Hour, false),
+		secureheader.XSSProtection(true, false),
 	)
 	http.ListenAndServe(":80", f.Filter(http.DefaultServeMux))
 }
 
 func ExampleFrameOptionsAllowFrom() {
 	http.Handle("/", http.FileServer(http.Dir("/tmp")))
-	f := secureheaders.FrameOptionsAllowFrom("https://example.com/")
+	f := secureheader.FrameOptionsAllowFrom("https://example.com/")
 	http.ListenAndServe(":80", f.Filter(http.DefaultServeMux))
 }

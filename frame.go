@@ -1,4 +1,4 @@
-package secureheaders
+package secureheader
 
 // FrameOptions returns a filter that adds an X-Frame-Options
 // header field with policy p.
