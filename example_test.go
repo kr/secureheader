@@ -14,8 +14,9 @@ func Example() {
 func Example_custom() {
 	http.Handle("/", http.FileServer(http.Dir("/tmp")))
 
-	// Permit unencrypted HTTP requests to subdomains.
-	// Permit pages to be contained in frames (omit FrameOptions).
+	// Differences from DefaultFilter:
+	// - permit unencrypted HTTP requests to subdomains in HSTS
+	// - permit pages to be contained in frames (omit FrameOptions)
 	f := secureheaders.Compose(
 		secureheaders.HTTPSRedirect(),
 		secureheaders.ContentTypeOptions(),
