@@ -8,9 +8,9 @@ func XSSProtection(on, block bool) Filter {
 	f := new(HeaderFilter)
 	f.Field = "X-XSS-Protection"
 	if on {
-		f.Value =  "1"
+		f.Value = "1"
 	} else {
-		f.Value =  "0"
+		f.Value = "0"
 	}
 	if block {
 		f.Value += "; mode=block"

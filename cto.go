@@ -5,6 +5,6 @@ package secureheaders
 func ContentTypeOptions() Filter {
 	return &HeaderFilter{
 		Field: "X-Content-Type-Options",
-		Value:  "nosniff",
+		Value: "nosniff",
 	}
 }
