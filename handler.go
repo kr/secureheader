@@ -23,6 +23,7 @@ package secureheaders
 
 // TODO(kr): figure out how to add this one:
 //   Content Security Policy:   https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
+// See https://github.com/kr/secureheaders/issues/1.
 
 import (
 	"net/http"
