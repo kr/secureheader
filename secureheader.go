@@ -66,7 +66,7 @@ type Config struct {
 	HSTSMaxAge            time.Duration
 	HSTSIncludeSubdomains bool
 
-	// If true, adds X-Frame-Options, to control when the request
+	// If true, sets X-Frame-Options, to control when the request
 	// should be displayed inside an HTML frame.
 	FrameOptions      bool
 	FrameOpionsPolicy FramePolicy
@@ -81,8 +81,8 @@ type Config struct {
 }
 
 // ServeHTTP sets header fields on w according to the options in
-// c, then calls c.Next(w, r). If c.HTTPSRedirect is true and r is
-// an unencrypted request, ServeHTTP responds with status 301 and
+// c, then runs c.Next. If c.HTTPSRedirect is true and r is an
+// unencrypted request, ServeHTTP responds with status 301 and
 // does not call c.Next.
 func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if c.HTTPSRedirect && r.URL.Scheme != "https" {
@@ -128,8 +128,8 @@ const (
 	SameOrigin FramePolicy = "SAMEORIGIN"
 )
 
-// AllowFrom returns a FramePolicy specifying that each requested
-// resource can be included in a frame from only the given url.
+// AllowFrom returns a FramePolicy specifying that the requested
+// resource should be included in a frame from only the given url.
 func AllowFrom(url string) FramePolicy {
 	return FramePolicy("ALLOW-FROM: " + url)
 }
