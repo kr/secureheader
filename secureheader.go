@@ -41,8 +41,8 @@ var DefaultConfig = &Config{
 	HSTSMaxAge:            100 * 24 * time.Hour,
 	HSTSIncludeSubdomains: true,
 
-	FrameOptions:      true,
-	FrameOpionsPolicy: Deny,
+	FrameOptions:       true,
+	FrameOptionsPolicy: Deny,
 
 	XSSProtection:      true,
 	XSSProtectionBlock: false,
@@ -68,8 +68,8 @@ type Config struct {
 
 	// If true, sets X-Frame-Options, to control when the request
 	// should be displayed inside an HTML frame.
-	FrameOptions      bool
-	FrameOpionsPolicy FramePolicy
+	FrameOptions       bool
+	FrameOptionsPolicy FramePolicy
 
 	// If true, sets X-XSS-Protection to "1", optionally with
 	// "mode=block". See the official documentation, linked above,
@@ -102,7 +102,7 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Strict-Transport-Security", v)
 	}
 	if c.FrameOptions {
-		w.Header().Set("X-Frame-Options", string(c.FrameOpionsPolicy))
+		w.Header().Set("X-Frame-Options", string(c.FrameOptionsPolicy))
 	}
 	if c.XSSProtection {
 		v := "1"
