@@ -113,7 +113,7 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // FramePolicy tells the browser under what circumstances to allow
-// the request to be displayed inside an HTML frame. There are
+// the response to be displayed inside an HTML frame. There are
 // three options:
 //
 //   Deny            do not permit display in a frame
