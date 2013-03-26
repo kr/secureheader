@@ -94,7 +94,7 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if c.ContentTypeOptions {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 	}
-	if c.HSTS {
+	if c.HSTS && r.URL.Scheme == "https" {
 		v := "max-age=" + strconv.FormatInt(int64(c.HSTSMaxAge/time.Second), 10)
 		if c.HSTSIncludeSubdomains {
 			v += "; includeSubDomains"
