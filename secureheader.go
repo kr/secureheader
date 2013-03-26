@@ -7,12 +7,14 @@
 //   Cross Site Scripting:      http://msdn.microsoft.com/en-us/library/dd565647%28v=vs.85%29.aspx
 //   Content Type Options:      http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx
 //
-// The easiest way to use this package is to replace nil in your
-// http.ListenAndServe call with secureheader.DefaultConfig.
-// DefaultConfig is configured with conservative (safer and more
-// restrictive) behavior. If you want to customize its behavior,
-// assign different values to its fields before calling
-// ListenAndServe. See the example code below.
+// The easiest way to use this package:
+//
+//   http.ListenAndServe(addr, secureheader.DefaultConfig)
+//
+// DefaultConfig is initialized with conservative (safer and more
+// restrictive) behavior. If you want to change that, set its
+// fields to different values before calling ListenAndServe. See
+// the example code below.
 //
 // This package was inspired by Twitter's secureheaders Ruby
 // library. See https://github.com/twitter/secureheaders.
