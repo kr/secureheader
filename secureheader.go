@@ -33,7 +33,8 @@ import (
 // DefaultConfig wraps the default http handler with some
 // conservative (safer and more restrictive) behavior.
 var DefaultConfig = &Config{
-	HTTPSRedirect: true,
+	HTTPSRedirect:          true,
+	HTTPSUseForwardedProto: UseForwardedProto(),
 
 	ContentTypeOptions: true,
 
@@ -53,7 +54,8 @@ var DefaultConfig = &Config{
 type Config struct {
 	// If true, redirects any request with scheme http to the
 	// equivalent https URL.
-	HTTPSRedirect bool
+	HTTPSRedirect          bool
+	HTTPSUseForwardedProto bool
 
 	// If true, sets X-Content-Type-Options to "nosniff".
 	ContentTypeOptions bool
@@ -132,4 +134,11 @@ const (
 // resource should be included in a frame from only the given url.
 func AllowFrom(url string) FramePolicy {
 	return FramePolicy("ALLOW-FROM: " + url)
+}
+
+// Whether to check the X-Forwarded-Proto header field by default.
+// This function returns false unless a build constraint has
+// replaced it with true, currently only on Heroku.
+func UseForwardedProto() bool {
+	return useForwardedProto()
 }
