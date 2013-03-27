@@ -33,7 +33,8 @@ import (
 // DefaultConfig wraps the default http handler with some
 // conservative (safer and more restrictive) behavior.
 var DefaultConfig = &Config{
-	HTTPSRedirect: true,
+	HTTPSRedirect:          true,
+	HTTPSUseForwardedProto: ShouldUseForwardedProto(),
 
 	ContentTypeOptions: true,
 
@@ -53,7 +54,8 @@ var DefaultConfig = &Config{
 type Config struct {
 	// If true, redirects any request with scheme http to the
 	// equivalent https URL.
-	HTTPSRedirect bool
+	HTTPSRedirect          bool
+	HTTPSUseForwardedProto bool
 
 	// If true, sets X-Content-Type-Options to "nosniff".
 	ContentTypeOptions bool
@@ -85,7 +87,7 @@ type Config struct {
 // unencrypted request, ServeHTTP responds with status 301 and
 // does not call c.Next.
 func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if c.HTTPSRedirect && r.URL.Scheme != "https" {
+	if c.HTTPSRedirect && !c.isHTTPS(r) {
 		url := *r.URL
 		url.Scheme = "https"
 		http.Redirect(w, r, url.String(), http.StatusMovedPermanently)
@@ -114,6 +116,12 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c.Next.ServeHTTP(w, r)
 }
 
+func (c *Config) isHTTPS(r *http.Request) bool {
+	return r.URL.Scheme == "https" ||
+		c.HTTPSUseForwardedProto &&
+			r.Header.Get("X-Forwarded-Proto") == "https"
+}
+
 // FramePolicy tells the browser under what circumstances to allow
 // the response to be displayed inside an HTML frame. There are
 // three options:
@@ -132,4 +140,16 @@ const (
 // resource should be included in a frame from only the given url.
 func AllowFrom(url string) FramePolicy {
 	return FramePolicy("ALLOW-FROM: " + url)
+}
+
+// ShouldUseForwardedProto returns whether to trust the
+// X-Forwarded-Proto header field.
+// DefaultConfig.HTTPSUseForwardedProto is initialized to this
+// value.
+//
+// This value depends on the particular environment where the
+// package is built. It is currently true iff build constraint
+// "heroku" is satisfied.
+func ShouldUseForwardedProto() bool {
+	return defaultUseForwardedProto
 }
