@@ -25,6 +25,7 @@ package secureheader
 // See https://github.com/kr/secureheader/issues/1.
 
 import (
+	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -35,6 +36,8 @@ import (
 var DefaultConfig = &Config{
 	HTTPSRedirect:          true,
 	HTTPSUseForwardedProto: ShouldUseForwardedProto(),
+
+	PermitClearLoopback: false,
 
 	ContentTypeOptions: true,
 
@@ -56,6 +59,10 @@ type Config struct {
 	// equivalent https URL.
 	HTTPSRedirect          bool
 	HTTPSUseForwardedProto bool
+
+	// Allow cleartext (non-HTTPS) HTTP connections to a loopback
+	// address, even if HTTPSRedirect is true.
+	PermitClearLoopback bool
 
 	// If true, sets X-Content-Type-Options to "nosniff".
 	ContentTypeOptions bool
@@ -87,7 +94,7 @@ type Config struct {
 // unencrypted request, ServeHTTP responds with status 301 and
 // does not call c.Next.
 func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if c.HTTPSRedirect && !c.isHTTPS(r) {
+	if c.HTTPSRedirect && !c.isHTTPS(r) && !c.okloopback(r) {
 		url := *r.URL
 		url.Scheme = "https"
 		http.Redirect(w, r, url.String(), http.StatusMovedPermanently)
@@ -114,6 +121,12 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-XSS-Protection", v)
 	}
 	c.Next.ServeHTTP(w, r)
+}
+
+// Given that r is cleartext (not HTTPS), okloopback returns
+// whether r is on a permitted loopback connection.
+func (c *Config) okloopback(r *http.Request) bool {
+	return c.PermitClearLoopback && isLoopback(r)
 }
 
 func (c *Config) isHTTPS(r *http.Request) bool {
@@ -152,4 +165,12 @@ func AllowFrom(url string) FramePolicy {
 // "heroku" is satisfied.
 func ShouldUseForwardedProto() bool {
 	return defaultUseForwardedProto
+}
+
+func isLoopback(r *http.Request) bool {
+	a, err := net.ResolveTCPAddr("tcp", r.RemoteAddr)
+	if err != nil {
+		return false
+	}
+	return a.IP.IsLoopback()
 }
