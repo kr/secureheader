@@ -174,8 +174,5 @@ func ShouldUseForwardedProto() bool {
 
 func isLoopback(r *http.Request) bool {
 	a, err := net.ResolveTCPAddr("tcp", r.RemoteAddr)
-	if err != nil {
-		return false
-	}
-	return a.IP.IsLoopback()
+	return err == nil && a.IP.IsLoopback()
 }
