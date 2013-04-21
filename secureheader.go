@@ -31,8 +31,8 @@ import (
 	"time"
 )
 
-// DefaultConfig wraps the default http handler with some
-// conservative (safer and more restrictive) behavior.
+// DefaultConfig is initialized with conservative (safer and more
+// restrictive) behavior.
 var DefaultConfig = &Config{
 	HTTPSRedirect:          true,
 	HTTPSUseForwardedProto: ShouldUseForwardedProto(),
@@ -50,8 +50,6 @@ var DefaultConfig = &Config{
 
 	XSSProtection:      true,
 	XSSProtectionBlock: false,
-
-	Next: http.DefaultServeMux,
 }
 
 type Config struct {
@@ -86,13 +84,16 @@ type Config struct {
 	XSSProtection      bool
 	XSSProtectionBlock bool
 
+	// Used by ServeHTTP, after setting any extra headers, to
+	// reply to the request. Next is typically nil, in which case
+	// http.DefaultServeMux is used instead.
 	Next http.Handler
 }
 
 // ServeHTTP sets header fields on w according to the options in
-// c, then runs c.Next. If c.HTTPSRedirect is true and r is an
-// unencrypted request, ServeHTTP responds with status 301 and
-// does not call c.Next.
+// c, then either replies directly or runs c.Next to reply.
+// Typically c.Next is nil, in which case http.DefaultServeMux is
+// used instead.
 func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if c.HTTPSRedirect && !c.isHTTPS(r) && !c.okloopback(r) {
 		url := *r.URL
@@ -120,7 +121,11 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("X-XSS-Protection", v)
 	}
-	c.Next.ServeHTTP(w, r)
+	next := c.Next
+	if next == nil {
+		next = http.DefaultServeMux
+	}
+	next.ServeHTTP(w, r)
 }
 
 // Given that r is cleartext (not HTTPS), okloopback returns
