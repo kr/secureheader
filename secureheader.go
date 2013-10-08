@@ -135,7 +135,7 @@ func (c *Config) okloopback(r *http.Request) bool {
 }
 
 func (c *Config) isHTTPS(r *http.Request) bool {
-	return r.URL.Scheme == "https" ||
+	return r.TLS != nil ||
 		c.HTTPSUseForwardedProto &&
 			r.Header.Get("X-Forwarded-Proto") == "https"
 }
