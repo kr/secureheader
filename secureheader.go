@@ -98,6 +98,7 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if c.HTTPSRedirect && !c.isHTTPS(r) && !c.okloopback(r) {
 		url := *r.URL
 		url.Scheme = "https"
+		url.Host = r.Host
 		http.Redirect(w, r, url.String(), http.StatusMovedPermanently)
 		return
 	}
