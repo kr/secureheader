@@ -136,9 +136,10 @@ func (c *Config) okloopback(r *http.Request) bool {
 }
 
 func (c *Config) isHTTPS(r *http.Request) bool {
-	return r.TLS != nil ||
-		c.HTTPSUseForwardedProto &&
-			r.Header.Get("X-Forwarded-Proto") == "https"
+	if c.HTTPSUseForwardedProto {
+		return r.Header.Get("X-Forwarded-Proto") == "https"
+	}
+	return r.TLS != nil
 }
 
 // FramePolicy tells the browser under what circumstances to allow
