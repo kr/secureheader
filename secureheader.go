@@ -42,7 +42,7 @@ var DefaultConfig = &Config{
 	ContentTypeOptions: true,
 
 	HSTS:                  true,
-	HSTSMaxAge:            100 * 24 * time.Hour,
+	HSTSMaxAge:            300 * 24 * time.Hour,
 	HSTSIncludeSubdomains: true,
 
 	FrameOptions:       true,
