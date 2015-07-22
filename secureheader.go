@@ -29,6 +29,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 // DefaultConfig is initialized with conservative (safer and more
@@ -90,11 +92,20 @@ type Config struct {
 	Next http.Handler
 }
 
-// ServeHTTP sets header fields on w according to the options in
+// ServeHTTP calls ServeHTTPContext with context.Background().
+func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	c.ServeHTTPContext(ctx, w, r)
+}
+
+// ServeHTTPContext sets header fields on w according to the options in
 // c, then either replies directly or runs c.Next to reply.
 // Typically c.Next is nil, in which case http.DefaultServeMux is
 // used instead.
-func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+//
+// If c.Next implements ContextHandler, then ServeHTTPContext will
+// provide ctx to c.Next.
+func (c *Config) ServeHTTPContext(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	if c.HTTPSRedirect && !c.isHTTPS(r) && !c.okloopback(r) {
 		url := *r.URL
 		url.Scheme = "https"
@@ -126,7 +137,17 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if next == nil {
 		next = http.DefaultServeMux
 	}
-	next.ServeHTTP(w, r)
+	if ctxHandler, ok := next.(ContextHandler); ok {
+		ctxHandler.ServeHTTPContext(ctx, w, r)
+	} else {
+		next.ServeHTTP(w, r)
+	}
+}
+
+// ContextHandler can be used by Config.Next to accept a context.Context.
+// See comment for Config.ServeHTTPContext.
+type ContextHandler interface {
+	ServeHTTPContext(context.Context, http.ResponseWriter, *http.Request)
 }
 
 // Given that r is cleartext (not HTTPS), okloopback returns
