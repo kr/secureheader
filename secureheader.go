@@ -44,6 +44,7 @@ var DefaultConfig = &Config{
 	HSTS:                  true,
 	HSTSMaxAge:            300 * 24 * time.Hour,
 	HSTSIncludeSubdomains: true,
+	HSTSPreload:           false,
 
 	FrameOptions:       true,
 	FrameOptionsPolicy: Deny,
@@ -72,6 +73,7 @@ type Config struct {
 	HSTS                  bool
 	HSTSMaxAge            time.Duration
 	HSTSIncludeSubdomains bool
+	HSTSPreload           bool
 
 	// If true, sets X-Frame-Options, to control when the request
 	// should be displayed inside an HTML frame.
@@ -109,6 +111,9 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		v := "max-age=" + strconv.FormatInt(int64(c.HSTSMaxAge/time.Second), 10)
 		if c.HSTSIncludeSubdomains {
 			v += "; includeSubDomains"
+		}
+		if c.HSTSPreload {
+			v += "; preload"
 		}
 		w.Header().Set("Strict-Transport-Security", v)
 	}

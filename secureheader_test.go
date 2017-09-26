@@ -21,3 +21,9 @@ func TestDefaultHSTSIncludeSubdomains(t *testing.T) {
 		t.Fatal("HSTSIncludeSubdomains = false want true")
 	}
 }
+
+func TestDefaultHSTSPreload(t *testing.T) {
+	if DefaultConfig.HSTSPreload {
+		t.Fatal("HSTSPreload = true want false")
+	}
+}
