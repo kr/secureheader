@@ -9,3 +9,9 @@ func TestDefaultUseForwardedProto(t *testing.T) {
 		t.Fatal("defaultUseForwardedProto = true want false")
 	}
 }
+
+func TestDefaultConfigHTTPSRedirect(t *testing.T) {
+	if !DefaultConfig.HTTPSRedirect {
+		t.Fatal("HTTPSRedirect = false want true")
+	}
+}
