@@ -15,3 +15,9 @@ func TestDefaultConfigHTTPSRedirect(t *testing.T) {
 		t.Fatal("HTTPSRedirect = false want true")
 	}
 }
+
+func TestDefaultHSTSIncludeSubdomains(t *testing.T) {
+	if !DefaultConfig.HSTSIncludeSubdomains {
+		t.Fatal("HSTSIncludeSubdomains = false want true")
+	}
+}
