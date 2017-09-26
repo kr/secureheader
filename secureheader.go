@@ -80,6 +80,9 @@ type Config struct {
 	CSPReportURI string
 
 	// If true, the browser will report CSP violations, but won't enforce them
+	// It *is* meaningful to set both headers
+	// Content-Security-Policy *AND* Content-Security-Policy-Report-Only
+	// and give them different bodys & report-uri's
 	CSPReportOnly          bool
 	CSPReportOnlyBody      string
 	CSPReportOnlyReportURI string
@@ -124,6 +127,20 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	if c.ContentTypeOptions {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+	}
+	if c.CSP {
+		v := c.CSPBody
+		if c.CSPReportURI != "" {
+			v += "; report-uri " + c.CSPReportURI
+		}
+		w.Header().Set("Content-Security-Policy", v)
+	}
+	if c.CSPReportOnly {
+		v := c.CSPReportOnlyBody
+		if c.CSPReportOnlyReportURI != "" {
+			v += "; report-uri " + c.CSPReportOnlyReportURI
+		}
+		w.Header().Set("Content-Security-Policy-Report-Only", v)
 	}
 	if c.HSTS && c.isHTTPS(r) {
 		v := "max-age=" + strconv.FormatInt(int64(c.HSTSMaxAge/time.Second), 10)
