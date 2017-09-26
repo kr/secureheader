@@ -41,12 +41,12 @@ var DefaultConfig = &Config{
 
 	ContentTypeOptions: true,
 
-	CSP: 					 false,
-	CSPBody:       "default-src 'self'",
-	CSPReportURI:  "",
+	CSP:          false,
+	CSPBody:      "default-src 'self'",
+	CSPReportURI: "",
 
-	CSPReportOnly: 					false,
-	CSPReportOnlyBody: 			"default-src 'self'",
+	CSPReportOnly:          false,
+	CSPReportOnlyBody:      "default-src 'self'",
 	CSPReportOnlyReportURI: "",
 
 	HSTS:                  true,
@@ -75,7 +75,7 @@ type Config struct {
 	ContentTypeOptions bool
 
 	// If true, enable Content Security Policy headers
-	CSP 				 bool
+	CSP          bool
 	CSPBody      string
 	CSPReportURI string
 
