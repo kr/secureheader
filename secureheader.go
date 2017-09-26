@@ -6,6 +6,7 @@
 //   Frame Options:             https://tools.ietf.org/html/draft-ietf-websec-x-frame-options-00
 //   Cross Site Scripting:      http://msdn.microsoft.com/en-us/library/dd565647%28v=vs.85%29.aspx
 //   Content Type Options:      http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx
+//   Content Security Policy:   https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
 //
 // The easiest way to use this package:
 //
@@ -19,10 +20,6 @@
 // This package was inspired by Twitter's secureheaders Ruby
 // library. See https://github.com/twitter/secureheaders.
 package secureheader
-
-// TODO(kr): figure out how to add this one:
-//   Content Security Policy:   https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
-// See https://github.com/kr/secureheader/issues/1.
 
 import (
 	"net"
@@ -74,7 +71,12 @@ type Config struct {
 	// If true, sets X-Content-Type-Options to "nosniff".
 	ContentTypeOptions bool
 
-	// If true, enable Content Security Policy headers
+	// If true, send a Content-Security-Policy header. For more
+	// information on deploying CSP, see for example
+	// https://medium.com/sourceclear/content-security-policy-with-sentry-efb04f336f59
+	// Dsiabled by default. If you set CSP = true,
+	// the default policy is "default-src 'self'" and reporting is disabled.
+	// To enable reporting, set CSPReportURI to your reporting endpoint.
 	CSP          bool
 	CSPBody      string
 	CSPReportURI string
@@ -82,7 +84,10 @@ type Config struct {
 	// If true, the browser will report CSP violations, but won't enforce them
 	// It *is* meaningful to set both headers
 	// Content-Security-Policy *AND* Content-Security-Policy-Report-Only
-	// and give them different bodys & report-uri's
+	// and give them different bodys & report-uri's. The browser will
+	// enforce the former, but only generate warnings on the latter.
+	// Like CSPBody, the default is "default-src 'self'", and
+	// Set CSPReportOnlyReportURI to your reporting endpoint.
 	CSPReportOnly          bool
 	CSPReportOnlyBody      string
 	CSPReportOnlyReportURI string
