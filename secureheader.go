@@ -4,8 +4,8 @@
 //
 //   Strict Transport Security: https://tools.ietf.org/html/rfc6797
 //   Frame Options:             https://tools.ietf.org/html/draft-ietf-websec-x-frame-options-00
-//   Cross Site Scripting:      http://msdn.microsoft.com/en-us/library/dd565647%28v=vs.85%29.aspx
-//   Content Type Options:      http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx
+//   Cross Site Scripting:      https://msdn.microsoft.com/en-us/library/dd565647%28v=vs.85%29.aspx
+//   Content Type Options:      https://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx
 //   Content Security Policy:   https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
 //
 // The easiest way to use this package:
