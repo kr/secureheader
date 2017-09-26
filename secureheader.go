@@ -41,6 +41,14 @@ var DefaultConfig = &Config{
 
 	ContentTypeOptions: true,
 
+	CSP: 					 false,
+	CSPBody:       "default-src 'self'",
+	CSPReportURI:  "",
+
+	CSPReportOnly: 					false,
+	CSPReportOnlyBody: 			"default-src 'self'",
+	CSPReportOnlyReportURI: "",
+
 	HSTS:                  true,
 	HSTSMaxAge:            300 * 24 * time.Hour,
 	HSTSIncludeSubdomains: true,
@@ -65,6 +73,16 @@ type Config struct {
 
 	// If true, sets X-Content-Type-Options to "nosniff".
 	ContentTypeOptions bool
+
+	// If true, enable Content Security Policy headers
+	CSP 				 bool
+	CSPBody      string
+	CSPReportURI string
+
+	// If true, the browser will report CSP violations, but won't enforce them
+	CSPReportOnly          bool
+	CSPReportOnlyBody      string
+	CSPReportOnlyReportURI string
 
 	// If true, sets the HTTP Strict Transport Security header
 	// field, which instructs browsers to send future requests

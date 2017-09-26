@@ -27,3 +27,15 @@ func TestDefaultHSTSPreload(t *testing.T) {
 		t.Fatal("HSTSPreload = true want false")
 	}
 }
+
+func TestDefaultCSP(t *testing.T) {
+	if DefaultConfig.CSP {
+		t.Fatal("CSP = true want false")
+	}
+}
+
+func TestDefaultCSPReportOnly(t *testing.T) {
+	if DefaultConfig.CSPReportOnly {
+		t.Fatal("CSPReportOnly = true want false")
+	}
+}
