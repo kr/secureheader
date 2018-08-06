@@ -58,6 +58,17 @@ var DefaultConfig = &Config{
 	XSSProtectionBlock: true,
 }
 
+// Handler returns a new HTTP handler
+// using the configuration in DefaultConfig,
+// serving requests using h.
+// If h is nil, it uses http.DefaultServeMux.
+func Handler(h http.Handler) *Config {
+	c := new(Config)
+	*c = *DefaultConfig
+	c.Next = h
+	return c
+}
+
 type Config struct {
 	// If true, redirects any request with scheme http to the
 	// equivalent https URL.
