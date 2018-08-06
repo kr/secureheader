@@ -55,7 +55,7 @@ var DefaultConfig = &Config{
 	FrameOptionsPolicy: Deny,
 
 	XSSProtection:      true,
-	XSSProtectionBlock: false,
+	XSSProtectionBlock: true,
 }
 
 type Config struct {
